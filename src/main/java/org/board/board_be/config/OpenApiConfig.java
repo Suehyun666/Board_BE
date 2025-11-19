@@ -48,7 +48,7 @@ public class OpenApiConfig {
                                 .url("https://opensource.org/licenses/MIT")))
                 .externalDocs(new ExternalDocumentation()
                         .description("GitHub Repository")
-                        .url("https://github.com/your-repo/board-api"))
+                        .url("https://github.com/Suehyun666/Board_BE"))
                 .servers(List.of(
                         new Server()
                                 .url("http://localhost:8080")
