@@ -27,9 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Tag(name = "게시글", description = "게시글 CRUD API")
+@Tag(name = "게시판", description = "게시판 CRUD API")
 @RestController
-@RequestMapping("/posts")
+@RequestMapping("/boards")
 @RequiredArgsConstructor
 public class PostController {
 
