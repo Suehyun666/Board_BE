@@ -4,161 +4,115 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Board API Documentation</title>
-    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==">
     <style>
         body {
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-        }
-
-        /* 커스텀 로딩 애니메이션 */
-        #loading {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            display: none;
-        }
-
-        #loading.show {
-            display: block;
-        }
-
-        .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-left-color: #6366f1;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 16px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <div id="loading" class="show">
-        <div class="spinner"></div>
-        <p style="color: #6366f1; font-size: 14px;">API 문서 로딩 중...</p>
-    </div>
-
-    <redoc
-        spec-url='/v3/api-docs'
-        theme='{
-            "colors": {
-                "primary": {
-                    "main": "#818cf8"
-                },
-                "success": {
-                    "main": "#34d399"
-                },
-                "warning": {
-                    "main": "#fbbf24"
-                },
-                "error": {
-                    "main": "#f87171"
-                },
-                "text": {
-                    "primary": "#f9fafb",
-                    "secondary": "#d1d5db"
-                },
-                "border": {
-                    "dark": "#374151",
-                    "light": "#4b5563"
-                },
-                "responses": {
-                    "success": {
-                        "color": "#34d399",
-                        "backgroundColor": "rgba(52, 211, 153, 0.15)"
-                    },
-                    "error": {
-                        "color": "#f87171",
-                        "backgroundColor": "rgba(248, 113, 113, 0.15)"
-                    },
-                    "redirect": {
-                        "color": "#fbbf24",
-                        "backgroundColor": "rgba(251, 191, 36, 0.15)"
-                    },
-                    "info": {
-                        "color": "#60a5fa",
-                        "backgroundColor": "rgba(96, 165, 250, 0.15)"
-                    }
-                },
-                "http": {
-                    "get": "#34d399",
-                    "post": "#60a5fa",
-                    "put": "#fbbf24",
-                    "delete": "#f87171",
-                    "patch": "#a78bfa"
-                }
-            },
-            "typography": {
-                "fontSize": "14px",
-                "lineHeight": "1.6",
-                "fontFamily": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Roboto\", \"Oxygen\", \"Ubuntu\", \"Cantarell\", \"Fira Sans\", \"Droid Sans\", \"Helvetica Neue\", sans-serif",
-                "headings": {
-                    "fontFamily": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Roboto\", \"Oxygen\", \"Ubuntu\", \"Cantarell\", \"Fira Sans\", \"Droid Sans\", \"Helvetica Neue\", sans-serif",
-                    "fontWeight": "700"
-                },
-                "code": {
-                    "fontSize": "13px",
-                    "fontFamily": "\"SF Mono\", \"Consolas\", \"Liberation Mono\", \"Menlo\", \"Courier\", monospace",
-                    "fontWeight": "400",
-                    "color": "#a78bfa",
-                    "backgroundColor": "#1f2937",
-                    "wrap": true
-                }
-            },
-            "sidebar": {
-                "backgroundColor": "#111827",
-                "textColor": "#e5e7eb",
-                "activeTextColor": "#818cf8",
-                "groupItems": {
-                    "textTransform": "none"
-                },
-                "level1Items": {
-                    "textTransform": "none"
-                },
-                "arrow": {
-                    "size": "1.2em",
-                    "color": "#9ca3af"
-                }
-            },
-            "rightPanel": {
-                "backgroundColor": "#0f172a",
-                "textColor": "#f1f5f9"
-            },
-            "codeBlock": {
-                "backgroundColor": "#0c0e1a"
-            }
-        }'
-        scroll-y-offset="0"
-        hide-hostname="false"
-        expand-responses="200,201"
-        json-sample-expand-level="2"
-        sort-props-alphabetically="false"
-        native-scrollbars="false"
-        path-in-middle-panel="false"
-        hide-loading="false"
-        menu-toggle="true"
-        disable-search="false"
-        only-required-in-samples="false"
-        payload-sample-idx="0"
-    ></redoc>
-
+    <div id="redoc-container"></div>
     <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"></script>
     <script>
-        // 문서 로딩 완료 후 로딩 애니메이션 숨김
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                document.getElementById('loading').classList.remove('show');
-            }, 500);
-        });
+        Redoc.init('/v3/api-docs', {
+            scrollYOffset: 0,
+            hideHostname: false,
+            expandResponses: '200,201',
+            jsonSampleExpandLevel: 2,
+            sortPropsAlphabetically: false,
+            nativeScrollbars: false,
+            pathInMiddlePanel: false,
+            menuToggle: true,
+            disableSearch: false,
+            onlyRequiredInSamples: false,
+            theme: {
+                colors: {
+                    primary: {
+                        main: '#818cf8'
+                    },
+                    success: {
+                        main: '#34d399'
+                    },
+                    warning: {
+                        main: '#fbbf24'
+                    },
+                    error: {
+                        main: '#f87171'
+                    },
+                    text: {
+                        primary: '#f9fafb',
+                        secondary: '#d1d5db'
+                    },
+                    border: {
+                        dark: '#374151',
+                        light: '#4b5563'
+                    },
+                    responses: {
+                        success: {
+                            color: '#34d399',
+                            backgroundColor: 'rgba(52, 211, 153, 0.1)'
+                        },
+                        error: {
+                            color: '#f87171',
+                            backgroundColor: 'rgba(248, 113, 113, 0.1)'
+                        },
+                        redirect: {
+                            color: '#fbbf24',
+                            backgroundColor: 'rgba(251, 191, 36, 0.1)'
+                        },
+                        info: {
+                            color: '#60a5fa',
+                            backgroundColor: 'rgba(96, 165, 250, 0.1)'
+                        }
+                    },
+                    http: {
+                        get: '#34d399',
+                        post: '#60a5fa',
+                        put: '#fbbf24',
+                        delete: '#f87171',
+                        patch: '#a78bfa'
+                    }
+                },
+                typography: {
+                    fontSize: '14px',
+                    lineHeight: '1.6',
+                    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                    headings: {
+                        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                        fontWeight: '600'
+                    },
+                    code: {
+                        fontSize: '13px',
+                        fontFamily: '"Consolas", "Monaco", "Courier New", monospace',
+                        color: '#a78bfa',
+                        backgroundColor: '#1f2937'
+                    }
+                },
+                sidebar: {
+                    backgroundColor: '#111827',
+                    textColor: '#e5e7eb',
+                    activeTextColor: '#818cf8',
+                    groupItems: {
+                        textTransform: 'none'
+                    },
+                    level1Items: {
+                        textTransform: 'none'
+                    },
+                    arrow: {
+                        size: '1.2em',
+                        color: '#9ca3af'
+                    }
+                },
+                rightPanel: {
+                    backgroundColor: '#0f172a',
+                    textColor: '#f1f5f9'
+                },
+                codeBlock: {
+                    backgroundColor: '#1e293b'
+                }
+            }
+        }, document.getElementById('redoc-container'));
     </script>
 </body>
 </html>
