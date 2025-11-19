@@ -29,10 +29,7 @@ kubectl apply -f k8s/secret.yml
 
 ### 2. PostgreSQL 배포
 ```bash
-kubectl apply -f k8s/postgres.yml
 
-# PostgreSQL이 Ready 상태가 될 때까지 대기
-kubectl wait --for=condition=ready pod -l app=postgres --timeout=300s
 ```
 
 ### 3. Backend 배포

@@ -1,32 +1,13 @@
 spring:
   application:
     name: board-api
-
-  datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/board}
-    username: ${DB_USERNAME:board_user}
-    password: ${DB_PASSWORD:board_pass}
-    driver-class-name: org.postgresql.Driver
-    hikari:
-      maximum-pool-size: ${DB_POOL_SIZE:10}
-      minimum-idle: 5
-      connection-timeout: 30000
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-    open-in-view: false
-
   servlet:
     multipart:
       enabled: true
       max-file-size: 5MB
       max-request-size: 50MB
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
 
 server:
   port: 8080
@@ -36,25 +17,9 @@ management:
     web:
       exposure:
         include: health,metrics,prometheus
-  prometheus:
-    metrics:
-      export:
-        enabled: true
 
 logging:
   level:
-    org.board: DEBUG
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-    org.springdoc: DEBUG
-    org.springframework.web: DEBUG
-
-springdoc:
-  api-docs:
-    path: /v3/api-docs
-  swagger-ui:
-    path: /swagger-ui.html
-    operations-sorter: method
-    tags-sorter: alpha
-  default-consumes-media-type: application/json
-  default-produces-media-type: application/json
+    org.board: INFO
+    org.hibernate.SQL: INFO
+    org.hibernate.type: INFO

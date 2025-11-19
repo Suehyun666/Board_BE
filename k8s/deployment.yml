@@ -42,7 +42,10 @@ spec:
             - name: DB_POOL_SIZE
               valueFrom:
                 secretKeyRef:
-                  name: DB_POOL_SIZE
+                  name: board-secret
+                  key: DB_POOL_SIZE
+            - name: SPRING_PROFILES_ACTIVE
+                value: prod
 
           resources:
             requests:
