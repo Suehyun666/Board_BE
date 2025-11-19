@@ -9,6 +9,7 @@ import org.board.board_be.domain.user.UserRepository;
 import org.board.board_be.web.dto.PostListResponse;
 import org.board.board_be.web.dto.PostRequest;
 import org.board.board_be.web.dto.PostResponse;
+import org.board.board_be.web.exception.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -39,14 +40,14 @@ public class PostService {
     public PostResponse get(Long id) {
         Post post = postRepository.findByIdWithDetails(id);
         if (post == null) {
-            throw new IllegalArgumentException("게시글을 찾을 수 없습니다");
+            throw new ResourceNotFoundException("게시글", id);
         }
         return PostResponse.from(post);
     }
 
     public Long create(Long userId, PostRequest request, List<PostFile> files) {
         User author = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+                .orElseThrow(() -> new ResourceNotFoundException("사용자", userId));
 
         Post post = Post.builder()
                 .author(author)
@@ -67,7 +68,7 @@ public class PostService {
     public void update(Long postId, Long userId, PostRequest request) {
         Post post = postRepository.findById(postId)
                 .filter(p -> !p.getIsDeleted())
-                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다"));
+                .orElseThrow(() -> new ResourceNotFoundException("게시글", postId));
 
         if (!post.getAuthor().getId().equals(userId)) {
             throw new SecurityException("수정 권한이 없습니다");
@@ -80,7 +81,7 @@ public class PostService {
     public void delete(Long postId, Long userId) {
         Post post = postRepository.findById(postId)
                 .filter(p -> !p.getIsDeleted())
-                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다"));
+                .orElseThrow(() -> new ResourceNotFoundException("게시글", postId));
 
         if (!post.getAuthor().getId().equals(userId)) {
             throw new SecurityException("삭제 권한이 없습니다");
