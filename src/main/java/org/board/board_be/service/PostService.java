@@ -30,7 +30,9 @@ public class PostService {
      */
     @Transactional(readOnly = true)
     public Page<PostListResponse> list(String keyword, Pageable pageable) {
-        return postRepository.searchList(keyword, pageable);
+        // keyword가 null이면 빈 문자열로 변환
+        String searchKeyword = (keyword == null || keyword.isBlank()) ? "" : keyword.trim();
+        return postRepository.searchList(searchKeyword, pageable);
     }
 
     /**

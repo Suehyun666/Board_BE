@@ -31,9 +31,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
         JOIN p.author u
         LEFT JOIN Comment c ON c.post.id = p.id AND c.isDeleted = false
         WHERE p.isDeleted = false
-          AND (:keyword IS NULL
-               OR p.title LIKE CONCAT('%', :keyword, '%')
-               OR p.content LIKE CONCAT('%', :keyword, '%'))
+          AND (:keyword = '' OR :keyword IS NULL
+               OR LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%'))
+               OR LOWER(p.content) LIKE LOWER(CONCAT('%', :keyword, '%')))
         GROUP BY p.id, p.title, u.nickname, p.viewCount, p.likeCount, p.createdAt
         ORDER BY p.createdAt DESC
     """)
