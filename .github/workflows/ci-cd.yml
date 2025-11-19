@@ -7,6 +7,22 @@ on:
 jobs:
   build-test:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: board
+          POSTGRES_USER: board_user
+          POSTGRES_PASSWORD: board_pass
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
     steps:
       - uses: actions/checkout@v4
 
@@ -23,6 +39,10 @@ jobs:
         run: ./gradlew build -x test
 
       - name: Run tests
+        env:
+          DB_URL: jdbc:postgresql://localhost:5432/board
+          DB_USERNAME: board_user
+          DB_PASSWORD: board_pass
         run: ./gradlew test
 
   docker-build-push:
