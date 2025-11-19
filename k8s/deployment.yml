@@ -1,0 +1,111 @@
+# Board Backend Deployment
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: board-backend
+  namespace: default
+  labels:
+    app: board-backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: board-backend
+  template:
+    metadata:
+      labels:
+        app: board-backend
+    spec:
+      containers:
+        - name: board-backend
+          image: your-registry/board-backend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: board-secret
+                  key: DB_URL
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: board-secret
+                  key: DB_USERNAME
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: board-secret
+                  key: DB_PASSWORD
+            - name: DB_POOL_SIZE
+              valueFrom:
+                secretKeyRef:
+                  name: board-secret
+                  key: DB_POOL_SIZE
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: board-backend-service
+  namespace: default
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app: board-backend
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: board-ingress
+  namespace: default
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - api.moodie.shop
+      secretName: board-tls
+  rules:
+    - host: api.moodie.shop
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: board-backend-service
+                port:
+                  number: 8080
