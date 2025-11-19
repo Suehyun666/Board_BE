@@ -51,6 +51,8 @@ jobs:
     if: github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -66,3 +68,12 @@ jobs:
           tags: |
             suehunpark/board-be:latest
             suehunpark/board-be:${{ github.sha }}
+
+      - name: Update Kubernetes manifest
+        run: |
+          sed -i "s|suehunpark/board-be:.*|suehunpark/board-be:${{ github.sha }}|g" k8s/deployment.yml
+          git config user.name "GitHub Actions Bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add k8s/deployment.yml
+          git commit -m "chore: update image tag to ${{ github.sha }} [skip ci]"
+          git push origin master
