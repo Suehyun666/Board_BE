@@ -10,7 +10,6 @@ import java.util.Map;
 
 @Tag(name = "헬스체크", description = "서버 상태 확인")
 @RestController
-@RequestMapping("/api")
 public class HealthController {
 
     @Operation(summary = "핑 테스트", description = "서버 정상 작동 확인")

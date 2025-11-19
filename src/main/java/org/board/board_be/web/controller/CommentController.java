@@ -27,7 +27,7 @@ public class CommentController {
 
     @Operation(summary = "댓글 목록 조회", description = "특정 게시글의 댓글 목록 조회")
     @ApiResponse(responseCode = "200", description = "조회 성공")
-    @GetMapping("/api/posts/{postId}/comments")
+    @GetMapping("/posts/{postId}/comments")
     public ResponseEntity<List<CommentResponse>> list(
             @Parameter(description = "게시글 ID", required = true) @PathVariable Long postId) {
         return ResponseEntity.ok(commentService.list(postId));
@@ -36,7 +36,7 @@ public class CommentController {
     @Operation(summary = "댓글 작성", description = "댓글 또는 대댓글 작성")
     @ApiResponse(responseCode = "200", description = "작성 성공")
     @ApiResponse(responseCode = "400", description = "입력값 검증 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-    @PostMapping("/api/posts/{postId}/comments")
+    @PostMapping("/posts/{postId}/comments")
     public ResponseEntity<Map<String, Long>> create(
             @Parameter(description = "게시글 ID", required = true) @PathVariable Long postId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "댓글 정보") @RequestBody @Valid CommentRequest request) {
@@ -48,7 +48,7 @@ public class CommentController {
     @Operation(summary = "댓글 수정", description = "댓글 내용 수정")
     @ApiResponse(responseCode = "200", description = "수정 성공")
     @ApiResponse(responseCode = "403", description = "수정 권한 없음", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-    @PutMapping("/api/comments/{id}")
+    @PutMapping("/comments/{id}")
     public ResponseEntity<Void> update(
             @Parameter(description = "댓글 ID", required = true) @PathVariable Long id,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "수정할 댓글 정보") @RequestBody @Valid CommentRequest request) {
@@ -60,7 +60,7 @@ public class CommentController {
     @Operation(summary = "댓글 삭제", description = "댓글 소프트 삭제")
     @ApiResponse(responseCode = "200", description = "삭제 성공")
     @ApiResponse(responseCode = "403", description = "삭제 권한 없음", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-    @DeleteMapping("/api/comments/{id}")
+    @DeleteMapping("/comments/{id}")
     public ResponseEntity<Void> delete(
             @Parameter(description = "댓글 ID", required = true) @PathVariable Long id) {
         Long currentUserId = 1L; // TODO: Security

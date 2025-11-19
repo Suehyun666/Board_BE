@@ -17,5 +17,24 @@ spring:
 springdoc:
   api-docs:
     enabled: true
+    path: /v3/api-docs
   swagger-ui:
     enabled: true
+    path: /swagger-ui.html
+    display-request-duration: true
+    operations-sorter: alpha
+    tags-sorter: alpha
+    try-it-out-enabled: true
+    filter: true
+    syntax-highlight:
+      activated: true
+      theme: monokai
+    persist-authorization: true
+    disable-swagger-default-url: true
+    query-config-enabled: true
+    default-models-expand-depth: 3
+    default-model-expand-depth: 3
+    default-model-rendering: model
+    doc-expansion: list
+    show-extensions: true
+    show-common-extensions: true

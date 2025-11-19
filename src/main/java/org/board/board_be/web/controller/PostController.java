@@ -29,7 +29,7 @@ import java.util.Map;
 
 @Tag(name = "게시글", description = "게시글 CRUD API")
 @RestController
-@RequestMapping("/api/posts")
+@RequestMapping("/posts")
 @RequiredArgsConstructor
 public class PostController {
 
