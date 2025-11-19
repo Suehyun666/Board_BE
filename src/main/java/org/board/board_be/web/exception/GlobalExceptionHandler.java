@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -60,6 +61,17 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * 400 Bad Request (필수 파라미터 누락) - 추가됨
+     * 예: userId가 없을 때 발생
+     */
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ApiResult<ErrorResponse>> handleMissingParams(MissingServletRequestParameterException ex) {
+        String message = String.format("필수 파라미터가 누락되었습니다: %s", ex.getParameterName());
+        ErrorResponse error = ErrorResponse.of("MISSING_PARAMETER", message);
+        return createErrorResponse(HttpStatus.BAD_REQUEST, error);
+    }
+
+    /**
      * 403 Forbidden (권한 없음)
      */
     @ExceptionHandler(SecurityException.class)
@@ -105,14 +117,13 @@ public class GlobalExceptionHandler {
 
     /**
      * 공통 응답 생성 헬퍼 메서드
-     * ApiResult로 감싸고 success: false로 설정
      */
     private ResponseEntity<ApiResult<ErrorResponse>> createErrorResponse(HttpStatus status, ErrorResponse error) {
         return ResponseEntity
                 .status(status)
                 .body(ApiResult.<ErrorResponse>builder()
-                        .success(false) // 에러이므로 false
-                        .data(error)    // data 필드에 상세 에러 내용 포함
+                        .success(false)
+                        .data(error)
                         .build()
                 );
     }
