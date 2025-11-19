@@ -45,7 +45,7 @@ spec:
                   name: board-secret
                   key: DB_POOL_SIZE
             - name: SPRING_PROFILES_ACTIVE
-                value: prod
+              value: dev
 
           resources:
             requests:
