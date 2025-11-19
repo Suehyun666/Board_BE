@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.board.board_be.domain.post.PostFile;
 import org.board.board_be.service.FileStorageService;
 import org.board.board_be.service.PostService;
+import org.board.board_be.web.dto.PostListResponse;
 import org.board.board_be.web.dto.PostRequest;
 import org.board.board_be.web.dto.PostResponse;
 import org.board.board_be.web.exception.ErrorResponse;
@@ -35,10 +36,13 @@ public class PostController {
     private final PostService postService;
     private final FileStorageService fileStorageService;
 
-    @Operation(summary = "게시글 목록 조회", description = "페이징과 검색을 지원하는 게시글 목록 조회")
+    @Operation(
+        summary = "게시글 목록 조회 (메인페이지용)",
+        description = "쿼리 최적화된 게시글 목록 조회 - 본문 제외, 댓글 수 포함, N+1 해결"
+    )
     @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping
-    public ResponseEntity<Page<PostResponse>> list(
+    public ResponseEntity<Page<PostListResponse>> list(
             @Parameter(description = "검색 키워드 (제목, 내용)") @RequestParam(required = false) String keyword,
             @Parameter(description = "페이징 정보") @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok(postService.list(keyword, pageable));

@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:17-alpine
+    container_name: board-postgres
+    environment:
+      POSTGRES_USER: board_user
+      POSTGRES_PASSWORD: board_pw
+      POSTGRES_DB: board
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d  # 초기화 스크립트 자동 실행
+    networks:
+      - board-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U board_user -d board"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Board Backend API
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: board-backend
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/board
+      DB_USERNAME: board_user
+      DB_PASSWORD: board_pw
+      DB_POOL_SIZE: 10
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - board-network
+    restart: unless-stopped
+
+networks:
+  board-network:
+    driver: bridge
+
+# 볼륨 정보
+volumes:
+  pg_data:

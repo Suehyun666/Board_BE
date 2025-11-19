@@ -6,6 +6,7 @@ import org.board.board_be.domain.post.PostFile;
 import org.board.board_be.domain.post.PostRepository;
 import org.board.board_be.domain.user.User;
 import org.board.board_be.domain.user.UserRepository;
+import org.board.board_be.web.dto.PostListResponse;
 import org.board.board_be.web.dto.PostRequest;
 import org.board.board_be.web.dto.PostResponse;
 import org.springframework.data.domain.Page;
@@ -23,17 +24,23 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
+    /**
+     * 메인페이지용 게시글 목록 조회 (경량화, 쿼리 최적화)
+     */
     @Transactional(readOnly = true)
-    public Page<PostResponse> list(String keyword, Pageable pageable) {
-        Page<Post> page = postRepository.search(keyword, pageable);
-        return page.map(PostResponse::from);
+    public Page<PostListResponse> list(String keyword, Pageable pageable) {
+        return postRepository.searchList(keyword, pageable);
     }
 
+    /**
+     * 게시글 상세 조회 (전체 정보)
+     */
     @Transactional(readOnly = true)
     public PostResponse get(Long id) {
-        Post post = postRepository.findById(id)
-                .filter(p -> !p.getIsDeleted())
-                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다"));
+        Post post = postRepository.findByIdWithDetails(id);
+        if (post == null) {
+            throw new IllegalArgumentException("게시글을 찾을 수 없습니다");
+        }
         return PostResponse.from(post);
     }
 
