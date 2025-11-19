@@ -1,118 +1,12 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Board API Documentation</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-        }
-    </style>
 </head>
 <body>
-    <div id="redoc-container"></div>
+    <redoc spec-url='/v3/api-docs'></redoc>
     <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"></script>
-    <script>
-        Redoc.init('/v3/api-docs', {
-            scrollYOffset: 0,
-            hideHostname: false,
-            expandResponses: '200,201',
-            jsonSampleExpandLevel: 2,
-            sortPropsAlphabetically: false,
-            nativeScrollbars: false,
-            pathInMiddlePanel: false,
-            menuToggle: true,
-            disableSearch: false,
-            onlyRequiredInSamples: false,
-            theme: {
-                colors: {
-                    primary: {
-                        main: '#818cf8'
-                    },
-                    success: {
-                        main: '#34d399'
-                    },
-                    warning: {
-                        main: '#fbbf24'
-                    },
-                    error: {
-                        main: '#f87171'
-                    },
-                    text: {
-                        primary: '#f9fafb',
-                        secondary: '#d1d5db'
-                    },
-                    border: {
-                        dark: '#374151',
-                        light: '#4b5563'
-                    },
-                    responses: {
-                        success: {
-                            color: '#34d399',
-                            backgroundColor: 'rgba(52, 211, 153, 0.1)'
-                        },
-                        error: {
-                            color: '#f87171',
-                            backgroundColor: 'rgba(248, 113, 113, 0.1)'
-                        },
-                        redirect: {
-                            color: '#fbbf24',
-                            backgroundColor: 'rgba(251, 191, 36, 0.1)'
-                        },
-                        info: {
-                            color: '#60a5fa',
-                            backgroundColor: 'rgba(96, 165, 250, 0.1)'
-                        }
-                    },
-                    http: {
-                        get: '#34d399',
-                        post: '#60a5fa',
-                        put: '#fbbf24',
-                        delete: '#f87171',
-                        patch: '#a78bfa'
-                    }
-                },
-                typography: {
-                    fontSize: '14px',
-                    lineHeight: '1.6',
-                    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-                    headings: {
-                        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-                        fontWeight: '600'
-                    },
-                    code: {
-                        fontSize: '13px',
-                        fontFamily: '"Consolas", "Monaco", "Courier New", monospace',
-                        color: '#a78bfa',
-                        backgroundColor: '#1f2937'
-                    }
-                },
-                sidebar: {
-                    backgroundColor: '#111827',
-                    textColor: '#e5e7eb',
-                    activeTextColor: '#818cf8',
-                    groupItems: {
-                        textTransform: 'none'
-                    },
-                    level1Items: {
-                        textTransform: 'none'
-                    },
-                    arrow: {
-                        size: '1.2em',
-                        color: '#9ca3af'
-                    }
-                },
-                rightPanel: {
-                    backgroundColor: '#0f172a',
-                    textColor: '#f1f5f9'
-                },
-                codeBlock: {
-                    backgroundColor: '#1e293b'
-                }
-            }
-        }, document.getElementById('redoc-container'));
-    </script>
 </body>
 </html>
