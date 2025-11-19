@@ -6,24 +6,29 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.board.board_be.domain.post.PostFile;
 import org.board.board_be.service.FileStorageService;
 import org.board.board_be.service.PostService;
-import org.board.board_be.web.dto.ApiResult; // Import 추가
+import org.board.board_be.web.dto.ApiResult;
 import org.board.board_be.web.dto.PostListResponse;
 import org.board.board_be.web.dto.PostRequest;
 import org.board.board_be.web.dto.PostResponse;
 import org.board.board_be.web.exception.ErrorResponse;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -148,5 +153,36 @@ public class PostController {
                         .data(null)
                         .build()
         );
+    }
+
+    @Operation(summary = "파일 다운로드", description = "업로드된 파일을 다운로드합니다")
+    @ApiResponse(responseCode = "200", description = "다운로드 성공")
+    @ApiResponse(responseCode = "404", description = "파일을 찾을 수 없음")
+    @GetMapping("/files/{fileName:.+}")
+    public ResponseEntity<Resource> downloadFile(
+            @Parameter(description = "파일명", required = true) @PathVariable String fileName,
+            HttpServletRequest request) {
+
+        Resource resource = fileStorageService.loadFileAsResource(fileName);
+
+        // 파일의 Content-Type 결정
+        String contentType = null;
+        try {
+            contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+        } catch (IOException ex) {
+            // Content-Type을 결정할 수 없으면 기본값 사용
+        }
+
+        if (contentType == null) {
+            contentType = "application/octet-stream";
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                // 브라우저 캐싱: 1년간 캐시 (이미지/파일은 변경되지 않으므로)
+                .cacheControl(org.springframework.http.CacheControl.maxAge(365, java.util.concurrent.TimeUnit.DAYS))
+                // 이미지는 인라인 표시, 다운로드 아님
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
     }
 }

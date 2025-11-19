@@ -54,10 +54,15 @@ public class CommentService {
         return saved.getId();
     }
 
-    public void update(Long commentId, Long userId, CommentRequest request) {
+    public void update(Long postId, Long commentId, Long userId, CommentRequest request) {
         Comment comment = commentRepository.findById(commentId)
                 .filter(c -> !c.getIsDeleted())
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다"));
+
+        // postId 검증: 댓글이 해당 게시글에 속하는지 확인
+        if (!comment.getPost().getId().equals(postId)) {
+            throw new IllegalArgumentException("해당 게시글의 댓글이 아닙니다");
+        }
 
         if (!comment.getAuthor().getId().equals(userId)) {
             throw new SecurityException("수정 권한이 없습니다");
@@ -66,10 +71,15 @@ public class CommentService {
         comment.setContent(request.getContent());
     }
 
-    public void delete(Long commentId, Long userId) {
+    public void delete(Long postId, Long commentId, Long userId) {
         Comment comment = commentRepository.findById(commentId)
                 .filter(c -> !c.getIsDeleted())
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다"));
+
+        // postId 검증: 댓글이 해당 게시글에 속하는지 확인
+        if (!comment.getPost().getId().equals(postId)) {
+            throw new IllegalArgumentException("해당 게시글의 댓글이 아닙니다");
+        }
 
         if (!comment.getAuthor().getId().equals(userId)) {
             throw new SecurityException("삭제 권한이 없습니다");

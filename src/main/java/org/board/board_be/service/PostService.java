@@ -6,6 +6,7 @@ import org.board.board_be.domain.post.PostFile;
 import org.board.board_be.domain.post.PostRepository;
 import org.board.board_be.domain.user.User;
 import org.board.board_be.domain.user.UserRepository;
+import org.board.board_be.web.dto.CommentResponse;
 import org.board.board_be.web.dto.PostListResponse;
 import org.board.board_be.web.dto.PostRequest;
 import org.board.board_be.web.dto.PostResponse;
@@ -24,6 +25,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final CommentService commentService;
 
     /**
      * 메인페이지용 게시글 목록 조회 (경량화, 쿼리 최적화)
@@ -36,7 +38,7 @@ public class PostService {
     }
 
     /**
-     * 게시글 상세 조회 (전체 정보)
+     * 게시글 상세 조회 (전체 정보 + 댓글)
      */
     @Transactional(readOnly = true)
     public PostResponse get(Long id) {
@@ -44,7 +46,11 @@ public class PostService {
         if (post == null) {
             throw new ResourceNotFoundException("게시글", id);
         }
-        return PostResponse.from(post);
+
+        // 댓글 목록 조회
+        List<CommentResponse> comments = commentService.list(id);
+
+        return PostResponse.from(post, comments);
     }
 
     public Long create(Long userId, PostRequest request, List<PostFile> files) {
