@@ -30,12 +30,13 @@ public class CommentController {
     @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping("/boards/{postId}/comments")
     public ResponseEntity<ApiResult<List<CommentResponse>>> list(
-            @Parameter(description = "게시글 ID", required = true) @PathVariable Long postId) {
+            @Parameter(description = "게시글 ID", required = true) @PathVariable Long postId,
+            @Parameter(description = "현재 사용자 ID (로그인한 경우)", required = false) @RequestParam(required = false) Long userId) {
 
         return ResponseEntity.ok(
                 ApiResult.<List<CommentResponse>>builder()
                         .success(true)
-                        .data(commentService.list(postId))
+                        .data(commentService.list(postId, userId))
                         .build()
         );
     }

@@ -65,12 +65,13 @@ public class PostController {
     @ApiResponse(responseCode = "404", description = "게시글을 찾을 수 없음", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     @GetMapping("/{id}")
     public ResponseEntity<ApiResult<PostResponse>> get(
-            @Parameter(description = "게시글 ID", required = true) @PathVariable Long id) {
+            @Parameter(description = "게시글 ID", required = true) @PathVariable Long id,
+            @Parameter(description = "현재 사용자 ID (로그인한 경우)", required = false) @RequestParam(required = false) Long userId) {
 
         return ResponseEntity.ok(
                 ApiResult.<PostResponse>builder()
                         .success(true)
-                        .data(postService.get(id))
+                        .data(postService.get(id, userId))
                         .build()
         );
     }

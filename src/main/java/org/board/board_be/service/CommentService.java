@@ -24,10 +24,10 @@ public class CommentService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public List<CommentResponse> list(Long postId) {
+    public List<CommentResponse> list(Long postId, Long currentUserId) {
         List<Comment> comments = commentRepository.findByPostIdAndIsDeletedFalseOrderByCreatedAtAsc(postId);
         return comments.stream()
-                .map(CommentResponse::from)
+                .map(comment -> CommentResponse.from(comment, currentUserId))
                 .toList();
     }
 

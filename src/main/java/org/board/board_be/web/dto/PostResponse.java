@@ -21,7 +21,7 @@ public class PostResponse {
     private String title;
     private String content;
     private String authorNickname;
-    private Long authorId;
+    private Boolean isAuthor;
     private Long viewCount;
     private Long likeCount;
     private Instant createdAt;
@@ -29,13 +29,16 @@ public class PostResponse {
     private List<PostFileDto> files;
     private List<CommentResponse> comments;
 
-    public static PostResponse from(Post post, List<CommentResponse> comments) {
+    public static PostResponse from(Post post, List<CommentResponse> comments, Long currentUserId) {
+        // 현재 사용자가 작성자인지 확인
+        boolean isAuthor = currentUserId != null && post.getAuthor().getId().equals(currentUserId);
+
         return PostResponse.builder()
                 .id(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .authorNickname(post.getAuthor().getNickname())
-                .authorId(post.getAuthor().getId())
+                .isAuthor(isAuthor)
                 .viewCount(post.getViewCount())
                 .likeCount(post.getLikeCount())
                 .createdAt(post.getCreatedAt())

@@ -41,16 +41,16 @@ public class PostService {
      * 게시글 상세 조회 (전체 정보 + 댓글)
      */
     @Transactional(readOnly = true)
-    public PostResponse get(Long id) {
+    public PostResponse get(Long id, Long currentUserId) {
         Post post = postRepository.findByIdWithDetails(id);
         if (post == null) {
             throw new ResourceNotFoundException("게시글", id);
         }
 
-        // 댓글 목록 조회
-        List<CommentResponse> comments = commentService.list(id);
+        // 댓글 목록 조회 (currentUserId 전달)
+        List<CommentResponse> comments = commentService.list(id, currentUserId);
 
-        return PostResponse.from(post, comments);
+        return PostResponse.from(post, comments, currentUserId);
     }
 
     public Long create(Long userId, PostRequest request, List<PostFile> files) {
