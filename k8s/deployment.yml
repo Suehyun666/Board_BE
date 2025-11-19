@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: board-backend
-          image: your-registry/board-backend:latest
+          image: suehunpark/board-be:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
