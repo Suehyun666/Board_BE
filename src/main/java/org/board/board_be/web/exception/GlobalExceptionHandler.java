@@ -16,21 +16,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
-        ErrorResponse error = ErrorResponse.builder()
-                .code("BAD_REQUEST")
-                .message(ex.getMessage())
-                .timestamp(Instant.now())
-                .build();
+        ErrorResponse error = ErrorResponse.of("BAD_REQUEST", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
     @ExceptionHandler(SecurityException.class)
     public ResponseEntity<ErrorResponse> handleSecurityException(SecurityException ex) {
-        ErrorResponse error = ErrorResponse.builder()
-                .code("FORBIDDEN")
-                .message(ex.getMessage())
-                .timestamp(Instant.now())
-                .build();
+        ErrorResponse error = ErrorResponse.of("FORBIDDEN", ex.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
 
@@ -43,22 +35,13 @@ public class GlobalExceptionHandler {
             errors.put(fieldName, errorMessage);
         });
 
-        ErrorResponse error = ErrorResponse.builder()
-                .code("VALIDATION_ERROR")
-                .message("입력값 검증 실패")
-                .details(errors)
-                .timestamp(Instant.now())
-                .build();
+        ErrorResponse error = ErrorResponse.of("VALIDATION_ERROR", "입력값 검증 실패", errors);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex) {
-        ErrorResponse error = ErrorResponse.builder()
-                .code("INTERNAL_SERVER_ERROR")
-                .message("서버 내부 오류가 발생했습니다")
-                .timestamp(Instant.now())
-                .build();
+        ErrorResponse error = ErrorResponse.of("INTERNAL_SERVER_ERROR", "서버 내부 오류가 발생했습니다");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 }
