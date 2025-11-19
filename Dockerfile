@@ -29,7 +29,7 @@ RUN groupadd -r spring && useradd -r -g spring spring
 RUN mkdir -p /app/uploads && chown -R spring:spring /app
 
 # Copy jar from build stage
-COPY --from=build /app/build/libs/*.jar app.jar
+COPY --from=build /app/build/libs/*-SNAPSHOT.jar app.jar
 
 # Change ownership
 RUN chown -R spring:spring /app
