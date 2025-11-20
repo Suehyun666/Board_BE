@@ -17,6 +17,7 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()
+                .openapi("3.0.0")
                 .info(new Info()
                         .title("Board API")
                         .description("""
