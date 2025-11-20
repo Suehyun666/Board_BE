@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: board-backend
-          image: suehunpark/board-be:2e7fbf7ca687347c891506b38ef6fa2f720634f0
+          image: suehunpark/board-be:586400ae43386ebe03b99e0ae0890941d81fc37a
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
